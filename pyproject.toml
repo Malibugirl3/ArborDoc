@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "arbordoc"
+version = "0.1.0"
+description = "Structured DOCX parsing and transformation toolkit."
+authors = ["ArborDoc Contributors"]
+readme = "README.md"
+packages = [{ include = "arbordoc", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+python-docx = "*"
+lxml = "*"
+pydantic = ">=2,<3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+
+[tool.poetry.scripts]
+arbordoc = "arbordoc.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core>=1.8.0"]
+build-backend = "poetry.core.masonry.api"

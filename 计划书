@@ -1,0 +1,127 @@
+ArborDoc：现代结构化文档处理与格式转化工具库
+
+1. 项目简介与愿景
+
+1.1 项目简介
+
+ArborDoc 是一个基于 python-docx 深度定制的文档处理 Python 工具包。其核心目标是解决传统 .docx 文件线性结构的痛点，通过解析引擎将文档转化为具备逻辑层级的**“文档树” (Document Tree)**。
+
+1.2 长期愿景
+
+从提供“样式映射与重建”的基础功能起步，逐步演进为一个连接 Office 生态与专业排版生态（LaTeX/PDF）的转换中枢。未来目标是实现高保真度的内容转化，并支持与云端排版平台（如 Overleaf）的一键集成。
+
+2. 核心架构设计
+
+为了确保 ArborDoc 可以作为标准的 Python 包（pip install arbordoc）供其他开发者和系统调用，项目采用库与接口分离的三层架构。
+
+2.1 三层架构模型
+
+底层依赖层 (Dependency Layer): 以 python-docx 和 lxml 为基石，负责底层的 OOXML 读写操作，不修改源码，只通过 API 和底层元素 (_element) 进行交互。
+
+核心解析层 (Core Extension Layer):
+
+Parser (解析器): 负责将扁平的段落、图片、表格转化为 DocTree 结构。
+
+Styler (样式引擎): 负责跨文档的格式迁移和预定义样式替换。
+
+应用与转换层 (Application & Conversion Layer):
+
+CLI (命令行工具): 提供终端指令调用。
+
+FastAPI Wrapper (服务接口): 提供 HTTP 接口供前端调用。
+
+Exporters (导出器): 预留 LatexExporter 等模块，处理跨格式转化。
+
+2.2 项目目录结构 (基于 src-layout)
+
+ArborDoc/
+├── src/
+│   └── arbordoc/
+│       ├── __init__.py
+│       ├── core/           # 核心解析与样式引擎
+│       │   ├── parser.py   # 线性结构转树状逻辑
+│       │   ├── tree.py     # 树节点操作与遍历
+│       │   └── styler.py   # 样式映射与替换逻辑
+│       ├── models/         # 数据模型定义
+│       │   └── schema.py   # 基于 Pydantic 的 DocNode 定义
+│       ├── converters/     # 格式转换器
+│       │   ├── base.py
+│       │   └── latex.py    # (Phase 2) LaTeX 转换逻辑
+│       └── utils/          # XML/图片/表格处理辅助工具
+├── tests/                  # 单元测试 (Pytest)
+├── examples/               # 示例模板与测试文档
+├── pyproject.toml          # Poetry/Flit 依赖与打包配置
+└── README.md
+
+
+3. 阶段性开发路线图 (Roadmap)
+
+本项目开发分为三个主要阶段，当前重点为 Phase 1。
+
+Phase 1: 核心结构化与样式映射 (基础版)
+
+目标：实现图片中给出的最基础要求——自动提取结构信息、形成文档树、并基于预定义 style 替换格式。
+
+Milestone 1.1: 数据模型构建
+
+使用 Pydantic 定义 DocNode（包含节点 ID、类型、层级、内容、子节点列表等）。
+
+Milestone 1.2: 解析引擎 (The Extractor)
+
+实现遍历 doc.element.body 的逻辑，确保文字、图片、表格顺序不乱。
+
+基于大纲级别 (Outline Level) 或标题样式 (Heading)，使用**栈 (Stack)**算法构建文档树。
+
+实现对图片二进制流的提取和临时缓存；实现表格底层 XML (CT_Tbl) 的识别与保留。
+
+Milestone 1.3: 模板重构引擎 (The Styler)
+
+建立跨文档的“样式字典 (Style Map)”。
+
+实现将解析出的 DocTree 重新注入到预定义的 template.docx 中。
+
+Milestone 1.4: 工具化与测试
+
+完成 CLI 命令行封装 (如 arbordoc transform -i src.docx -t tpl.docx)。
+
+编写核心组件的 Pytest 单元测试。
+
+Phase 2: 进阶解析与 LaTeX 转化 (专业版)
+
+目标：提升对复杂元素的解析能力，实现基础的一键 LaTeX 代码生成。
+
+OMML 转 LaTeX：通过 lxml 配合 XSLT/Pandoc 解析 Word 公式，转化为 LaTeX 代码。
+
+高保真表格转化：将嵌套较深的 Docx 表格结构转化为 LaTeX 的 tabular 或 booktabs 代码。
+
+图表提取优化：解析 DrawingML 提取源数据，或转换为高清图片格式。
+
+LaTeX Exporter：基于 Jinja2 或 Mako 模板，将完整的 DocTree 渲染为标准 .tex 文件。
+
+Phase 3: 云端集成与在线排版 (生态版)
+
+目标：打通在线协作流程。
+
+FastAPI 服务化：提供稳定的文件处理 API。
+
+Overleaf API 对接：实现生成 LaTeX 后一键推送到用户的 Overleaf 项目。
+
+轻量级预览：结合 KaTeX/MathJax，在 Web 端实现公式与文档树的实时预览。
+
+4. 技术栈摘要
+
+核心语言: Python 3.10+
+
+文档处理基石: python-docx, lxml
+
+数据校验与结构: pydantic v2
+
+包管理与构建: poetry
+
+测试框架: pytest
+
+API 与部署 (可选): FastAPI, uvicorn
+
+未来组件 (预研): Pandoc (可选, 辅助复杂转换), Jinja2 (LaTeX 模板生成)
+
+文档更新日期：2026年4月29日
