@@ -9,9 +9,12 @@ This module is ArborDoc's boundary with the low-level dependency layer:
 from __future__ import annotations
 
 import re
-from typing import Iterator, List, Optional, Union
+import tempfile
+from pathlib import Path
+from typing import Dict, Iterator, List, Optional, Union
 
 from docx.document import Document as DocumentObject
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml.ns import qn
 from docx.oxml.table import CT_Tbl
 from docx.oxml.text.paragraph import CT_P
@@ -62,6 +65,55 @@ def extract_image_relation_ids(paragraph: Paragraph) -> List[str]:
         if relation_id:
             relation_ids.append(relation_id)
     return relation_ids
+
+
+def get_image_blob(document: DocumentObject, relationship_id: str) -> Optional[bytes]:
+    """Return PNG/JPEG/other image bytes for an ``r:id`` referencing an image part."""
+    try:
+        rel = document.part.rels[relationship_id]
+    except KeyError:
+        return None
+    if rel.reltype != RT.IMAGE:
+        return None
+    part = rel.target_part
+    blob = getattr(part, "blob", None)
+    if blob is None:
+        return None
+    return bytes(blob)
+
+
+def extract_image_blob_cache(document: DocumentObject) -> Dict[str, bytes]:
+    """Map every embedded image ``r:id`` in the package to raw bytes (deduplicated)."""
+    cache: Dict[str, bytes] = {}
+    for rel_id, rel in document.part.rels.items():
+        if rel.reltype != RT.IMAGE:
+            continue
+        blob = get_image_blob(document, rel_id)
+        if blob is not None:
+            cache[rel_id] = blob
+    return cache
+
+
+def extract_image_blob_cache_to_directory(
+    document: DocumentObject,
+    directory: Optional[Union[str, Path]] = None,
+) -> tuple[Path, Dict[str, Path]]:
+    """Write image blobs next to ``directory`` keyed by sanitized ``r:id`` filenames.
+
+    If ``directory`` is omitted a temporary folder is created. Returns the directory path
+    and a map from ``r:id`` → written file paths for reuse by styler or exporters.
+    """
+    base = Path(directory) if directory else Path(tempfile.mkdtemp(prefix="arbordoc_img_"))
+    base.mkdir(parents=True, exist_ok=True)
+    mem = extract_image_blob_cache(document)
+    path_map: Dict[str, Path] = {}
+    safe = re.compile(r"[^a-zA-Z0-9._-]")
+    for rel_id, blob in mem.items():
+        name = safe.sub("_", rel_id) + ".dat"
+        out = base / name
+        out.write_bytes(blob)
+        path_map[rel_id] = out
+    return base, path_map
 
 
 def extract_paragraph_block(paragraph: Paragraph, *, index: int) -> DocBlock:

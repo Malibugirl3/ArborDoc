@@ -1,9 +1,29 @@
 from __future__ import annotations
 
+import base64
 from pathlib import Path
 
 import pytest
 from docx import Document
+from docx.shared import Inches
+
+# Valid 1×1 PNG for embedding in test documents.
+_MINIMAL_PNG = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQYBACHV7NkAAAAASUVORK5CYII="
+)
+
+
+@pytest.fixture()
+def sample_docx_with_image(tmp_path: Path) -> Path:
+    """DOCX with one inline picture (paragraph + image)."""
+    png_path = tmp_path / "tiny.png"
+    png_path.write_bytes(_MINIMAL_PNG)
+    docx_path = tmp_path / "with_image.docx"
+    document = Document()
+    document.add_paragraph("Has image:")
+    document.add_picture(str(png_path), width=Inches(0.5))
+    document.save(docx_path)
+    return docx_path
 
 
 @pytest.fixture()

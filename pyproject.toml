@@ -20,6 +20,7 @@ arbordoc = "arbordoc.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]
