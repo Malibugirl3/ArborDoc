@@ -1,0 +1,101 @@
+{
+  "id": "136a4ccf-5d00-4a6f-860d-52aa106b3de9",
+  "type": "document",
+  "level": 0,
+  "text": null,
+  "meta": {
+    "source_path": "_demo_phase1/sample_source.docx"
+  },
+  "children": [
+    {
+      "id": "0842fa8e-e447-4148-b6a3-610e9f2512e2",
+      "type": "heading",
+      "level": 1,
+      "text": "第一章 概述",
+      "meta": {
+        "style": "Heading 1"
+      },
+      "children": [
+        {
+          "id": "539ff042-01de-4a65-9959-73c4a232f121",
+          "type": "paragraph",
+          "level": 1,
+          "text": "这是正文第一段。",
+          "meta": {
+            "style": "Normal",
+            "image_rel_ids": []
+          },
+          "children": []
+        },
+        {
+          "id": "67a16bcc-5d23-412a-bf0c-45674c154ec3",
+          "type": "heading",
+          "level": 2,
+          "text": "1.1 细节",
+          "meta": {
+            "style": "Heading 2"
+          },
+          "children": [
+            {
+              "id": "e3474ae1-97b4-4f2e-bd50-8629569d60a0",
+              "type": "paragraph",
+              "level": 2,
+              "text": "小节内的段落。",
+              "meta": {
+                "style": "Normal",
+                "image_rel_ids": []
+              },
+              "children": []
+            },
+            {
+              "id": "eff916a1-4562-4b78-810f-46ad2aca6452",
+              "type": "paragraph",
+              "level": 2,
+              "text": "段落内含图片：",
+              "meta": {
+                "style": "Normal",
+                "image_rel_ids": [
+                  "rId9"
+                ]
+              },
+              "children": [
+                {
+                  "id": "48ef7e0a-3ec2-4abc-93d3-c5a657cbb02d",
+                  "type": "image",
+                  "level": 2,
+                  "text": null,
+                  "meta": {
+                    "relationship_id": "rId9"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "fbd8d8a7-5b2d-4b4b-b56d-1f35c810796e",
+              "type": "table",
+              "level": 2,
+              "text": null,
+              "meta": {
+                "index": 5,
+                "rows": [
+                  [
+                    "A1",
+                    "B1"
+                  ],
+                  [
+                    "A2",
+                    "B2"
+                  ]
+                ],
+                "row_count": 2,
+                "column_count": 2
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
