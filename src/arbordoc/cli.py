@@ -8,6 +8,7 @@ from typing import List, Optional
 
 from arbordoc.assist.config import load_assist_config
 from arbordoc.assist.pipeline import apply_merge_instructions, prepare_assist_workspace
+from arbordoc.converters.latex import LatexExporter
 from arbordoc.core.parser import parse_docx
 from arbordoc.core.styler import transform_docx
 from arbordoc.core.tree import write_json
@@ -25,6 +26,15 @@ def build_parser() -> argparse.ArgumentParser:
     transform_parser.add_argument("-i", "--input", required=True, help="Source DOCX file path.")
     transform_parser.add_argument("-t", "--template", required=True, help="Template DOCX file path.")
     transform_parser.add_argument("-o", "--output", required=True, help="Output DOCX file path.")
+
+    latex_parser = subparsers.add_parser("export-latex", help="Export a DOCX file to baseline LaTeX.")
+    latex_parser.add_argument("-i", "--input", required=True, help="Input DOCX file path.")
+    latex_parser.add_argument("-o", "--output", required=True, help="Output TEX file path.")
+    latex_parser.add_argument(
+        "--fragment",
+        action="store_true",
+        help="Write only body fragment (without documentclass/begin/end document).",
+    )
 
     assist_parser = subparsers.add_parser(
         "assist",
@@ -68,6 +78,14 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     if args.command == "transform":
         transform_docx(args.input, args.template, args.output)
+        return 0
+
+    if args.command == "export-latex":
+        root = parse_docx(args.input)
+        rendered = LatexExporter(standalone=not args.fragment).export(root)
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(rendered, encoding="utf-8")
         return 0
 
     if args.command == "assist":

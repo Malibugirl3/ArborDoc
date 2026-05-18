@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(poetry run *)",
+      "Bash(pip show *)",
+      "Bash(where python *)",
+      "Bash(pip install *)",
+      "Bash(PYTHONPATH=src python -m pytest tests/ -v)",
+      "Bash(python *)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_lists.py -v)",
+      "Bash(PYTHONPATH=src python -m pytest tests/test_headers_footers.py -v)"
+    ]
+  }
+}

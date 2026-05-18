@@ -50,3 +50,33 @@ def sample_template_docx(tmp_path: Path) -> Path:
     document.add_paragraph("Template placeholder.")
     document.save(path)
     return path
+
+
+@pytest.fixture()
+def sample_formatted_docx(tmp_path: Path) -> Path:
+    """DOCX with bold, italic, colored runs and basic paragraph formatting."""
+    from docx.shared import Pt, RGBColor
+
+    path = tmp_path / "formatted.docx"
+    document = Document()
+
+    para = document.add_paragraph()
+    run = para.add_run("Bold text")
+    run.font.bold = True
+    run = para.add_run(" normal ")
+    run = para.add_run("Italic text")
+    run.font.italic = True
+
+    para2 = document.add_paragraph()
+    run = para2.add_run("Blue text")
+    run.font.color.rgb = RGBColor(0x00, 0x00, 0xFF)
+    run = para2.add_run(" and ")
+    run = para2.add_run("Red text")
+    run.font.color.rgb = RGBColor(0xFF, 0x00, 0x00)
+
+    para3 = document.add_paragraph()
+    para3.paragraph_format.alignment = 1  # CENTER
+    para3.add_run("Centered paragraph")
+
+    document.save(path)
+    return path

@@ -36,6 +36,13 @@ Rebuild a parsed document into a template:
 poetry run arbordoc transform -i input.docx -t template.docx -o result.docx
 ```
 
+Export a DOCX file to baseline LaTeX:
+
+```bash
+poetry run arbordoc export-latex -i input.docx -o output.tex
+poetry run arbordoc export-latex -i input.docx -o fragment.tex --fragment
+```
+
 Assist workspace (review + merge gate):
 
 ```bash
@@ -76,6 +83,7 @@ The current implementation supports:
 - paragraph extraction with preserved body order
 - table capture and basic reconstruction into templates
 - inline images with optional embedding during rebuild when source DOCX is available
+- baseline LaTeX export (`export-latex`) for headings/paragraphs/tables with image TODO markers
 - **assist**: Markdown structural review, `merge_instructions` gate, `tree.merged.json`
 
 More advanced fidelity features such as OMML → LaTeX, merged-cell-perfect tables, and remote template galleries are documented in `计划书` for later phases.

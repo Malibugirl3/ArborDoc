@@ -15,13 +15,15 @@ from pydantic import BaseModel, Field
 
 
 class NodeType(str, Enum):
-    """Minimal node types needed for Phase 1."""
+    """Node types for the document tree."""
 
     DOCUMENT = "document"
     HEADING = "heading"
     PARAGRAPH = "paragraph"
     TABLE = "table"
     IMAGE = "image"
+    HEADER = "header"
+    FOOTER = "footer"
 
 
 class BlockType(str, Enum):
@@ -31,6 +33,80 @@ class BlockType(str, Enum):
     PARAGRAPH = "paragraph"
     TABLE = "table"
     IMAGE = "image"
+    HEADER = "header"
+    FOOTER = "footer"
+
+
+class InlineElementType(str, Enum):
+    """Types of inline content within a paragraph or heading."""
+
+    TEXT_RUN = "text_run"
+    HYPERLINK_RUN = "hyperlink_run"
+    INLINE_IMAGE = "inline_image"
+
+
+class RunFormat(BaseModel):
+    """Formatting properties of a single text run."""
+
+    bold: Optional[bool] = None
+    italic: Optional[bool] = None
+    underline: Optional[bool] = None
+    strikethrough: Optional[bool] = None
+    superscript: Optional[bool] = None
+    subscript: Optional[bool] = None
+    font_name: Optional[str] = None
+    font_size_pt: Optional[float] = None
+    font_color_rgb: Optional[str] = None
+    highlight_color: Optional[str] = None
+    style_name: Optional[str] = None
+
+
+class TextRun(BaseModel):
+    """A text run with formatting."""
+
+    type: InlineElementType = Field(default=InlineElementType.TEXT_RUN)
+    text: str = ""
+    format: RunFormat = Field(default_factory=RunFormat)
+
+
+class HyperlinkRun(BaseModel):
+    """A hyperlink containing formatted text runs."""
+
+    type: InlineElementType = Field(default=InlineElementType.HYPERLINK_RUN)
+    url: str = ""
+    children: list[TextRun] = Field(default_factory=list)
+
+
+class InlineImageInline(BaseModel):
+    """An image anchored inline within a paragraph."""
+
+    type: InlineElementType = Field(default=InlineElementType.INLINE_IMAGE)
+    relationship_id: str = ""
+
+
+class ParagraphFormat(BaseModel):
+    """Paragraph-level formatting."""
+
+    alignment: Optional[str] = None
+    line_spacing: Optional[float] = None
+    line_spacing_rule: Optional[str] = None
+    space_before: Optional[float] = None
+    space_after: Optional[float] = None
+    left_indent: Optional[float] = None
+    right_indent: Optional[float] = None
+    first_line_indent: Optional[float] = None
+    page_break_before: Optional[bool] = None
+    keep_lines_together: Optional[bool] = None
+    keep_with_next: Optional[bool] = None
+    style_name: Optional[str] = None
+
+
+class ListInfo(BaseModel):
+    """List numbering information for a paragraph."""
+
+    num_id: int
+    level: int = 0
+    is_ordered: bool = False
 
 
 class DocBlock(BaseModel):
@@ -43,7 +119,6 @@ class DocBlock(BaseModel):
     meta: dict[str, Any] = Field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        """Serialize the block into plain JSON-compatible objects."""
         return self.model_dump(mode="json")
 
 
@@ -56,21 +131,21 @@ class DocNode(BaseModel):
     text: Optional[str] = None
     meta: dict[str, Any] = Field(default_factory=dict)
     children: list["DocNode"] = Field(default_factory=list)
+    inline_content: Optional[list[TextRun | HyperlinkRun | InlineImageInline]] = None
+    list_info: Optional[ListInfo] = None
+    paragraph_format: Optional[ParagraphFormat] = None
 
     def add_child(self, child: "DocNode") -> "DocNode":
-        """Append a child node and return it for fluent tree building."""
         self.children.append(child)
         return child
 
     def iter_depth_first(self) -> list["DocNode"]:
-        """Return a depth-first snapshot including the current node."""
         nodes = [self]
         for child in self.children:
             nodes.extend(child.iter_depth_first())
         return nodes
 
     def to_dict(self) -> dict[str, Any]:
-        """Serialize the node tree into plain JSON-compatible objects."""
         return self.model_dump(mode="json")
 
 
