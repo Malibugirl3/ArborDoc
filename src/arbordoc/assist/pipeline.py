@@ -46,6 +46,25 @@ def prepare_assist_workspace(
     return workspace_dir
 
 
+def prepare_assist_with_llm(
+    input_docx: Path,
+    workspace_dir: Path,
+    api_key: str,
+    *,
+    model: str = "deepseek-chat",
+    base_url: str = "https://api.deepseek.com",
+) -> Path:
+    """Prepare workspace and generate an LLM structural analysis."""
+    from arbordoc.assist.llm import analyse_with_llm
+    from arbordoc.core.parser import parse_docx
+
+    prepare_assist_workspace(input_docx, workspace_dir, llm_allowed=True)
+    tree = parse_docx(input_docx)
+    _, ai_analysis = analyse_with_llm(tree, api_key=api_key)
+    (workspace_dir / "assist_ai_analysis.md").write_text(ai_analysis, encoding="utf-8")
+    return workspace_dir
+
+
 def apply_merge_instructions(workspace_dir: Path) -> Path:
     """Read merge_instructions.json and emit tree.merged.json (never touches DOCX)."""
     inst_path = workspace_dir / "merge_instructions.json"

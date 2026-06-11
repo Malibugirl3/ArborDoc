@@ -18,6 +18,7 @@ httpx = "*"
 
 [tool.poetry.extras]
 server = ["fastapi", "uvicorn", "python-multipart"]
+llm = ["openai"]
 
 [tool.poetry.scripts]
 arbordoc = "arbordoc.cli:main"

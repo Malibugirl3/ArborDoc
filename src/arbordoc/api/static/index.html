@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArborDoc - DOCX Structured Parsing Toolkit</title>
+<style>
+  :root { --bg:#f0f4f8;--card:#fff;--border:#dde4ed;--text:#1a202c;--muted:#64748b;--accent:#2b6d4e;--accent-light:#eaf5ef;--danger:#c53030;--danger-light:#fff5f5;--radius:10px }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+  .header{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 2px rgba(0,0,0,.05);flex-wrap:wrap}
+  .header h1{font-size:20px;font-weight:700}.header .sub{color:var(--muted);font-size:13px;margin-left:6px}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .lang-btn{padding:4px 12px;font-size:13px;font-weight:500;border:1px solid var(--border);border-radius:5px;background:var(--card);color:var(--text);cursor:pointer;transition:all .15s;font-family:inherit}
+  .lang-btn:hover{background:#eef2f7}.lang-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tab-bar{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--border);padding:0 28px;overflow-x:auto}
+  .tab-btn{padding:12px 18px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;border:none;border-bottom:3px solid transparent;background:none;transition:all .15s;white-space:nowrap;font-family:inherit}
+  .tab-btn:hover{color:var(--text)}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .container{max-width:960px;margin:0 auto;padding:24px 20px 40px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .card-title{font-size:15px;font-weight:600;margin-bottom:12px}
+  .dropzone{border:2px dashed var(--border);border-radius:var(--radius);padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s}
+  .dropzone:hover,.dropzone.active{border-color:var(--accent);background:var(--accent-light)}
+  .dropzone .dz-hint{color:var(--muted);font-size:12px;margin-top:4px}
+  .dropzone input[type=file]{display:none}
+  .dropzone .dz-name{font-weight:600;color:var(--accent);margin-top:6px;font-size:14px}
+  .dropzone-row{display:flex;gap:12px}.dropzone-row .dropzone{flex:1;padding:24px 12px}
+  button{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;font-size:14px;font-weight:500;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;transition:all .15s;font-family:inherit}
+  button:hover{background:#eef2f7}button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}button.primary:hover{filter:brightness(1.1)}button:disabled{opacity:.5;cursor:not-allowed}
+  .btn-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  pre{background:#1a202c;color:#d4e0ed;border-radius:var(--radius);padding:16px;font-size:13px;line-height:1.5;font-family:"Cascadia Code","Fira Code",Consolas,monospace;max-height:500px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+  .md-box{background:#fafbfc;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;max-height:500px;overflow-y:auto;font-size:14px}
+  .md-box h1{font-size:18px;margin:10px 0 6px}.md-box h2{font-size:15px;margin:8px 0 4px}.md-box ul{padding-left:18px}.md-box li{margin:2px 0}.md-box code{background:#e8ecf1;padding:1px 4px;border-radius:3px;font-size:13px}.md-box pre{background:#1a202c;color:#d4e0ed;padding:12px;max-height:200px}
+  .status-msg{margin-top:10px;padding:8px 14px;border-radius:6px;font-size:13px;display:none}
+  .status-msg.show{display:block}.status-msg.info{background:#ebf8ff;color:#2b6cb0}.status-msg.ok{background:#f0fff4;color:#276749}.status-msg.err{background:var(--danger-light);color:var(--danger)}
+  .toggle-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .toggle-sw{position:relative;width:44px;height:24px;background:#cbd5e0;border-radius:12px;cursor:pointer;transition:background .2s;flex-shrink:0}
+  .toggle-sw.on{background:var(--accent)}
+  .toggle-sw::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s}
+  .toggle-sw.on::after{transform:translateX(20px)}.toggle-lbl{font-size:14px;font-weight:500}.toggle-st{font-size:13px;color:var(--muted);min-width:24px}
+  .api-key-inp{padding:6px 10px;font-size:13px;width:280px;border:1px solid var(--border);border-radius:6px;display:none}
+  .api-key-inp.show{display:inline-block}.hint-sm{color:var(--muted);font-size:12px;margin-top:4px}
+  .llm-box{margin-top:14px;padding:14px 16px;background:#f7fafc;border:1px solid var(--border);border-radius:8px}
+  .spinner{display:inline-block;width:14px;height:14px;border:2px solid #cbd5e0;border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  label{cursor:pointer;font-size:14px;display:flex;align-items:center;gap:6px;margin:8px 0}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>ArborDoc</h1><span class="sub" data-i18n="subtitle">DOCX Structured Parsing &amp; Transformation Toolkit</span></div>
+  <div class="header-right">
+    <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">&#20013;&#25991;</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="parse"><span data-i18n="tab.parse">Parse</span></button>
+  <button class="tab-btn" data-tab="transform"><span data-i18n="tab.transform">Transform</span></button>
+  <button class="tab-btn" data-tab="latex"><span data-i18n="tab.latex">LaTeX</span></button>
+  <button class="tab-btn" data-tab="assist"><span data-i18n="tab.assist">Assist</span></button>
+</div>
+<div class="container">
+
+<!-- PARSE -->
+<section id="sec-parse" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="parse.title">Upload a .docx file to parse its structure</div>
+    <div class="dropzone" id="dz-parse">
+      <div data-i18n="parse.drop">Drag &amp; drop a .docx file here or click to browse</div>
+      <div class="dz-hint" data-i18n="parse.hint">Accepted: .docx files up to 16 MB</div>
+      <div class="dz-name" id="dz-parse-name"></div>
+      <input type="file" id="file-parse" accept=".docx">
+    </div>
+    <div class="btn-row"><button class="primary" id="btn-parse" disabled data-i18n="parse.btn">Parse Document</button></div>
+    <div class="status-msg" id="status-parse"></div>
+  </div>
+  <div class="card hidden" id="card-parse-out">
+    <div class="card-title" data-i18n="parse.outTitle">Document Tree (JSON)</div>
+    <pre id="out-parse"></pre>
+    <div class="btn-row"><button id="btn-parse-dl" data-i18n="parse.dl">Download JSON</button></div>
+  </div>
+</section>
+
+<!-- TRANSFORM -->
+<section id="sec-transform" class="tab-panel hidden">
+  <div class="card">
+    <div class="card-title" data-i18n="tf.title">Upload source + template to rebuild a styled .docx</div>
+    <div class="dropzone" id="dz-tf-src">
+      <div data-i18n="tf.src">Source .docx</div>
+      <div class="dz-hint" data-i18n="tf.srcHint">Content to extract</div>
+      <div class="dz-name" id="dz-tf-src-name"></div>
+      <input type="file" id="file-tf-src" accept=".docx">
+    </div>
+    <div style="margin-top:14px">
+      <label style="font-weight:600;margin-bottom:4px" data-i18n="tf.tplSelect">Template:</label>
+      <select id="tpl-select" style="padding:6px 10px;font-size:14px;border:1px solid var(--border);border-radius:6px;width:100%;max-width:400px">
+        <option value="minimal">Minimal &mdash; Clean Calibri 11pt</option>
+        <option value="business">Business &mdash; Arial 10.5pt, report structure</option>
+        <option value="academic">Academic &mdash; Times New Roman 12pt, 1.5 spacing</option>
+        <option value="custom" data-i18n="tf.customOpt">Custom upload...</option>
+      </select>
+    </div>
+    <div class="dropzone hidden" id="dz-tf-tpl" style="margin-top:10px">
+      <div data-i18n="tf.tpl">Template .docx</div>
+      <div class="dz-hint" data-i18n="tf.tplHint">Styles to apply</div>
+      <div class="dz-name" id="dz-tf-tpl-name"></div>
+      <input type="file" id="file-tf-tpl" accept=".docx">
+    </div>
+    <div class="btn-row"><button class="primary" id="btn-tf" disabled data-i18n="tf.btn">Transform &amp; Download</button></div>
+    <div class="status-msg" id="status-tf"></div>
+  </div>
+</section>
+
+<!-- LATEX -->
+<section id="sec-latex" class="tab-panel hidden">
+  <div class="card">
+    <div class="card-title" data-i18n="ltx.title">Export a .docx to LaTeX</div>
+    <div class="dropzone" id="dz-ltx">
+      <div data-i18n="ltx.drop">Drag &amp; drop a .docx file here or click to browse</div>
+      <div class="dz-hint" data-i18n="ltx.hint">LaTeX will be generated server-side</div>
+      <div class="dz-name" id="dz-ltx-name"></div>
+      <input type="file" id="file-ltx" accept=".docx">
+    </div>
+    <label data-i18n="ltx.frag"><input type="checkbox" id="ltx-frag"> Body fragment only (no preamble)</label>
+    <div class="btn-row"><button class="primary" id="btn-ltx" disabled data-i18n="ltx.btn">Export LaTeX</button></div>
+    <div class="status-msg" id="status-ltx"></div>
+  </div>
+  <div class="card hidden" id="card-ltx-out">
+    <div class="card-title" data-i18n="ltx.outTitle">LaTeX Output</div>
+    <pre id="out-ltx"></pre>
+    <div class="btn-row"><button id="btn-ltx-dl" data-i18n="ltx.dl">Download .tex</button></div>
+  </div>
+</section>
+
+<!-- ASSIST -->
+<section id="sec-assist" class="tab-panel hidden">
+  <div class="card">
+    <div class="card-title" data-i18n="asst.title">AI-assisted document structure review</div>
+    <div class="dropzone" id="dz-asst">
+      <div data-i18n="asst.drop">Drag &amp; drop a .docx file here or click to browse</div>
+      <div class="dz-hint" data-i18n="asst.hint">Structural review will be generated automatically</div>
+      <div class="dz-name" id="dz-asst-name"></div>
+      <input type="file" id="file-asst" accept=".docx">
+    </div>
+    <div class="llm-box">
+      <div class="toggle-wrap">
+        <span class="toggle-lbl" data-i18n="asst.llm">DeepSeek AI Analysis (Optional):</span>
+        <div class="toggle-sw" id="toggle-llm"></div>
+        <span class="toggle-st" id="toggle-st">Off</span>
+      </div>
+      <input class="api-key-inp" id="apikey-inp" type="password" placeholder="DeepSeek API Key (sk-...)">
+      <div class="hint-sm" id="apikey-hint" style="display:none" data-i18n="asst.apiHint">Your API key is sent only to this server and is never stored.</div>
+    </div>
+    <div class="btn-row"><button class="primary" id="btn-asst" disabled data-i18n="asst.btn">Run Analysis</button></div>
+    <div class="status-msg" id="status-asst"></div>
+  </div>
+  <div class="card hidden" id="card-asst-review">
+    <div class="card-title" data-i18n="asst.reviewTitle">Structural Review</div>
+    <div class="md-box" id="out-review"></div>
+  </div>
+  <div class="card hidden" id="card-asst-ai">
+    <div class="card-title" data-i18n="asst.aiTitle">AI Analysis</div>
+    <div class="md-box" id="out-ai"></div>
+  </div>
+  <div class="card hidden" id="card-asst-json">
+    <div class="card-title" data-i18n="asst.treeTitle">Document Tree</div>
+    <pre id="out-asst-json"></pre>
+    <div class="btn-row"><button id="btn-asst-dl-base" data-i18n="asst.dlBase">Download Baseline JSON</button></div>
+  </div>
+</section>
+</div>
+
+<script>
+var I18N={
+zh:{subtitle:'DOCX 结构化文档解析与转换工具包','tab.parse':'解析','tab.transform':'转换','tab.latex':'LaTeX','tab.assist':'智能辅助','parse.title':'上传 .docx 文件以解析其结构','parse.drop':'拖拽 .docx 文件到此处或点击浏览','parse.hint':'支持：.docx 文件，最大 16 MB','parse.btn':'解析文档','parse.outTitle':'文档树 (JSON)','parse.dl':'下载 JSON','tf.title':'上传源文件 + 模板以重建带样式的 .docx','tf.src':'源文件 .docx','tf.srcHint':'要提取的内容','tf.tpl':'模板 .docx','tf.tplHint':'要应用的样式','tf.tplSelect':'选择模板：','tf.customOpt':'自定义上传…','tf.btn':'转换并下载','ltx.title':'导出 .docx 为 LaTeX','ltx.drop':'拖拽 .docx 文件到此处或点击浏览','ltx.hint':'LaTeX 将在服务端生成','ltx.frag':'仅正文片段（无导言区）','ltx.btn':'导出 LaTeX','ltx.outTitle':'LaTeX 输出','ltx.dl':'下载 .tex','asst.title':'AI 辅助文档结构审阅','asst.drop':'拖拽 .docx 文件到此处或点击浏览','asst.hint':'结构审阅将自动生成','asst.llm':'DeepSeek AI 分析（可选）：','asst.apiHint':'API Key 仅发送到此服务器，不会存储。','asst.btn':'运行分析','asst.reviewTitle':'结构审阅','asst.aiTitle':'AI 分析建议','asst.treeTitle':'文档树','asst.dlBase':'下载基线 JSON',parsing:'正在解析文档…',parsedOk:'解析成功',transforming:'正在转换文档…',transformOk:'转换完成——已开始下载',exporting:'正在导出 LaTeX…',exportOk:'LaTeX 导出成功',analysing:'正在分析文档结构…',analysingAI:'正在运行 AI 分析（约 15-30 秒）…',analysisOk:'分析完成',withAI:'（含 AI 建议）',llmErr:' —— LLM 错误：'},
+en:{subtitle:'DOCX Structured Parsing &amp; Transformation Toolkit','tab.parse':'Parse','tab.transform':'Transform','tab.latex':'LaTeX','tab.assist':'Assist','parse.title':'Upload a .docx file to parse its structure','parse.drop':'Drag &amp; drop a .docx file here or click to browse','parse.hint':'Accepted: .docx files up to 16 MB','parse.btn':'Parse Document','parse.outTitle':'Document Tree (JSON)','parse.dl':'Download JSON','tf.title':'Upload source + template to rebuild a styled .docx','tf.src':'Source .docx','tf.srcHint':'Content to extract','tf.tpl':'Template .docx','tf.tplHint':'Styles to apply','tf.tplSelect':'Template:','tf.customOpt':'Custom upload...','tf.btn':'Transform &amp; Download','ltx.title':'Export a .docx to LaTeX','ltx.drop':'Drag &amp; drop a .docx file here or click to browse','ltx.hint':'LaTeX will be generated server-side','ltx.frag':'Body fragment only (no preamble)','ltx.btn':'Export LaTeX','ltx.outTitle':'LaTeX Output','ltx.dl':'Download .tex','asst.title':'AI-assisted document structure review','asst.drop':'Drag &amp; drop a .docx file here or click to browse','asst.hint':'Structural review will be generated automatically','asst.llm':'DeepSeek AI Analysis (Optional):','asst.apiHint':'Your API key is sent only to this server and is never stored.','asst.btn':'Run Analysis','asst.reviewTitle':'Structural Review','asst.aiTitle':'AI Analysis','asst.treeTitle':'Document Tree','asst.dlBase':'Download Baseline JSON',parsing:'Parsing document...',parsedOk:'Parsed successfully',transforming:'Transforming document...',transformOk:'Transform complete — download started',exporting:'Exporting LaTeX...',exportOk:'LaTeX exported successfully',analysing:'Analysing document structure...',analysingAI:'Running AI analysis (15-30s)...',analysisOk:'Analysis complete',withAI:' (with AI proposal)',llmErr:' — LLM error: '}};
+var LANG=localStorage.getItem('arbordoc_lang')||'zh';
+function t(k){return(I18N[LANG]&&I18N[LANG][k])||(I18N.en[k])||k}
+function setLang(l){LANG=l;localStorage.setItem('arbordoc_lang',l);$$('.lang-btn').forEach(function(b){b.classList.toggle('active',b.dataset.lang===l)});document.documentElement.lang=l==='zh'?'zh-CN':'en';$$('[data-i18n]').forEach(function(el){var s=t(el.dataset.i18n);if(s&&!el.querySelector('span,button,input'))el.textContent=s})}
+setLang(LANG);
+function $(s){return document.querySelector(s)}
+function $$(s){return document.querySelectorAll(s)}
+function setStatus(id,msg,cls){var el=$(id);el.textContent=msg;el.className='status-msg '+cls+' show'}
+function fmtBytes(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(1)+' MB'}
+function prettyJSON(o){try{return JSON.stringify(typeof o==='string'?JSON.parse(o):o,null,2)}catch(e){return String(o)}}
+function download(content,name,mime){var b=new Blob([content],{type:mime||'text/plain;charset=utf-8'});var u=window.URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();window.setTimeout(function(){document.body.removeChild(a);window.URL.revokeObjectURL(u)},1000)}
+$$('.tab-btn').forEach(function(btn){btn.addEventListener('click',function(){$$('.tab-btn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');$$('.tab-panel').forEach(function(p){p.classList.add('hidden')});$('#sec-'+btn.dataset.tab).classList.remove('hidden')})});
+function wireDrop(dzId,inpId,nameId,cb){var dz=$(dzId);var inp=$(inpId);var nm=$(nameId);dz.addEventListener('click',function(){inp.click()});dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('active')});dz.addEventListener('dragleave',function(){dz.classList.remove('active')});dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('active');if(e.dataTransfer.files.length){inp.files=e.dataTransfer.files;if(nm)nm.textContent=e.dataTransfer.files[0].name;if(cb)cb(e.dataTransfer.files[0])}});inp.addEventListener('change',function(){if(inp.files.length){if(nm)nm.textContent=inp.files[0].name;if(cb)cb(inp.files[0])}})}
+
+// PARSE
+var parseFile=null;
+wireDrop('#dz-parse','#file-parse','#dz-parse-name',function(f){parseFile=f;$('#btn-parse').disabled=false});
+$('#btn-parse').addEventListener('click',async function(){if(!parseFile)return;var btn=this;btn.disabled=true;setStatus('#status-parse','<span class=spinner></span>'+t('parsing'),'info');try{var fd=new FormData();fd.append('file',parseFile);var res=await fetch('/parse',{method:'POST',body:fd});if(!res.ok){var e=await res.json();throw new Error(e.error)}var data=await res.json();var js=prettyJSON(data);$('#out-parse').textContent=js;$('#card-parse-out').classList.remove('hidden');setStatus('#status-parse',t('parsedOk')+' — '+fmtBytes(js.length)+' JSON','ok');$('#btn-parse-dl').onclick=function(){download(js,parseFile.name.replace(/\.docx$/i,'')+'_tree.json','application/json')}}catch(err){setStatus('#status-parse',err.message,'err')}btn.disabled=false});
+
+// TRANSFORM
+var tfSrc=null,tfTpl=null,tfTplKey='minimal',tfReady=false;
+function checkTF(){tfReady=tfSrc&&(tfTplKey!=='custom'||tfTpl);$('#btn-tf').disabled=!tfReady}
+wireDrop('#dz-tf-src','#file-tf-src','#dz-tf-src-name',function(f){tfSrc=f;checkTF()});
+wireDrop('#dz-tf-tpl','#file-tf-tpl','#dz-tf-tpl-name',function(f){tfTpl=f;checkTF()});
+$('#tpl-select').addEventListener('change',function(){tfTplKey=this.value;if(tfTplKey==='custom'){$('#dz-tf-tpl').classList.remove('hidden')}else{$('#dz-tf-tpl').classList.add('hidden');tfTpl=null}checkTF()});
+$('#tpl-select').value='minimal';checkTF();
+$('#btn-tf').addEventListener('click',async function(){if(!tfReady)return;var btn=this;btn.disabled=true;setStatus('#status-tf','<span class=spinner></span>'+t('transforming'),'info');try{var fd=new FormData();fd.append('source',tfSrc);if(tfTplKey==='custom'){if(!tfTpl)throw new Error('Please select a template file.');fd.append('template',tfTpl)}else{fd.append('template_key',tfTplKey)}var res=await fetch('/transform',{method:'POST',body:fd});if(!res.ok){var ct=res.headers.get('content-type')||'';var em='Server error: '+res.status;if(ct.indexOf('application/json')!==-1){try{var ej=await res.json();em=ej.error||(ej.errors||[]).join(', ')||em}catch(ex){}}throw new Error(em)}var blob=await res.blob();var u=window.URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='styled_'+(tfSrc.name||'output.docx');a.style.display='none';document.body.appendChild(a);a.click();window.setTimeout(function(){document.body.removeChild(a);window.URL.revokeObjectURL(u)},1000);setStatus('#status-tf',t('transformOk'),'ok')}catch(err){setStatus('#status-tf',err.message,'err')}btn.disabled=false});
+
+// LATEX
+var ltxFile=null;
+wireDrop('#dz-ltx','#file-ltx','#dz-ltx-name',function(f){ltxFile=f;$('#btn-ltx').disabled=false});
+$('#btn-ltx').addEventListener('click',async function(){if(!ltxFile)return;var btn=this;btn.disabled=true;setStatus('#status-ltx','<span class=spinner></span>'+t('exporting'),'info');try{var fd=new FormData();fd.append('file',ltxFile);fd.append('fragment',$('#ltx-frag').checked);var res=await fetch('/export-latex',{method:'POST',body:fd});if(!res.ok){var e=await res.json();throw new Error(e.error)}var tex=await res.text();$('#out-ltx').textContent=tex;$('#card-ltx-out').classList.remove('hidden');setStatus('#status-ltx',t('exportOk'),'ok');$('#btn-ltx-dl').onclick=function(){download(tex,ltxFile.name.replace(/\.docx$/i,'')+'.tex')}}catch(err){setStatus('#status-ltx',err.message,'err')}btn.disabled=false});
+
+// ASSIST
+var asstFile=null,llmOn=false;
+wireDrop('#dz-asst','#file-asst','#dz-asst-name',function(f){asstFile=f;$('#btn-asst').disabled=false});
+$('#toggle-llm').addEventListener('click',function(){llmOn=!llmOn;if(llmOn){this.classList.add('on');$('#apikey-inp').classList.add('show');$('#apikey-hint').style.display='';$('#toggle-st').textContent='On';$('#toggle-st').style.color='var(--accent)'}else{this.classList.remove('on');$('#apikey-inp').classList.remove('show');$('#apikey-hint').style.display='none';$('#toggle-st').textContent='Off';$('#toggle-st').style.color='var(--muted)'}});
+$('#btn-asst').addEventListener('click',async function(){if(!asstFile)return;var btn=this;btn.disabled=true;var hasLLM=llmOn&&$('#apikey-inp').value.trim();setStatus('#status-asst','<span class=spinner></span>'+(hasLLM?t('analysingAI'):t('analysing')),'info');try{var fd=new FormData();fd.append('file',asstFile);fd.append('use_llm',hasLLM);if(hasLLM)fd.append('api_key',$('#apikey-inp').value.trim());var res=await fetch('/assist/prepare',{method:'POST',body:fd});if(!res.ok){var e=await res.json();throw new Error(e.error)}var data=await res.json();if(data.review_md){$('#out-review').innerHTML=renderMD(data.review_md);$('#card-asst-review').classList.remove('hidden')}if(data.ai_analysis){$('#out-ai').innerHTML=renderMD(data.ai_analysis);$('#card-asst-ai').classList.remove('hidden')}else{$('#card-asst-ai').classList.add('hidden')}var js=prettyJSON(data.base_tree);$('#out-asst-json').textContent=js;$('#card-asst-json').classList.remove('hidden');var bn=asstFile.name.replace(/\.docx$/i,'');$('#btn-asst-dl-base').onclick=function(){download(prettyJSON(data.base_tree),bn+'_tree_base.json','application/json')};var sm=t('analysisOk');if(data.ai_analysis)sm+=' '+t('withAI');if(data.llm_error)sm+=t('llmErr')+data.llm_error;setStatus('#status-asst',sm,data.llm_error?'err':'ok')}catch(err){setStatus('#status-asst',err.message,'err')}btn.disabled=false});
+function renderMD(md){var h=md.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');h=h.replace(/```(\w*)\n([\s\S]*?)```/g,'<pre><code>$2</code></pre>');h=h.replace(/`([^`]+)`/g,'<code>$1</code>');h=h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');h=h.replace(/\*(.+?)\*/g,'<em>$1</em>');h=h.replace(/^#### (.+)$/gm,'<h4>$1</h4>');h=h.replace(/^### (.+)$/gm,'<h3>$1</h3>');h=h.replace(/^## (.+)$/gm,'<h2>$1</h2>');h=h.replace(/^# (.+)$/gm,'<h1>$1</h1>');h=h.replace(/^- (.+)$/gm,'<li>$1</li>');h=h.replace(/((?:<li>.*?<\/li>\n?)+)/g,'<ul>$1</ul>');h=h.replace(/\n\n/g,'</p><p>');h=h.replace(/\n/g,'<br>');h='<p>'+h+'</p>';h=h.replace(/<p><\/p>/g,'');return h}
+</script>
+</body>
+</html>
