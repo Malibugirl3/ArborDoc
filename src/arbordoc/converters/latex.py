@@ -40,18 +40,60 @@ class LatexExporter(BaseExporter):
     def __init__(self, *, standalone: bool = True) -> None:
         self.standalone = standalone
 
+    @staticmethod
+    def _has_cjk(text: str) -> bool:
+        """Return True if the text contains any CJK character."""
+        for ch in text:
+            cp = ord(ch)
+            if (
+                (0x4E00 <= cp <= 0x9FFF)       # CJK Unified
+                or (0x3400 <= cp <= 0x4DBF)    # CJK Unified Extension A
+                or (0x20000 <= cp <= 0x2A6DF)  # CJK Unified Extension B
+                or (0xF900 <= cp <= 0xFAFF)    # CJK Compatibility
+                or (0x3040 <= cp <= 0x309F)    # Hiragana
+                or (0x30A0 <= cp <= 0x30FF)    # Katakana
+                or (0xAC00 <= cp <= 0xD7AF)    # Hangul
+            ):
+                return True
+        return False
+
+    @staticmethod
+    def _tree_has_cjk(node: DocNode) -> bool:
+        """Check if any text in the tree contains CJK characters."""
+        if node.text and LatexExporter._has_cjk(node.text):
+            return True
+        if node.meta:
+            for v in node.meta.values():
+                if isinstance(v, str) and LatexExporter._has_cjk(v):
+                    return True
+        for child in node.children:
+            if LatexExporter._tree_has_cjk(child):
+                return True
+        return False
+
     def export(self, root: DocNode) -> str:
         lines: list[str] = []
         if self.standalone:
-            lines.extend(
-                [
+            needs_cjk = self._tree_has_cjk(root)
+            if needs_cjk:
+                lines.extend([
+                    r"\documentclass{ctexart}",
+                    r"\usepackage{array}",
+                    r"\usepackage{hyperref}",
+                    r"\usepackage{ulem}",
+                    r"\begin{document}",
+                    "",
+                ])
+            else:
+                lines.extend([
                     r"\documentclass{article}",
                     r"\usepackage[utf8]{inputenc}",
                     r"\usepackage{array}",
+                    r"\usepackage{hyperref}",
+                    r"\usepackage{ulem}",
                     r"\begin{document}",
                     "",
-                ]
-            )
+                ])
 
         for child in root.children:
             lines.extend(self._render_node(child))

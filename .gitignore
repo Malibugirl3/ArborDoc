@@ -29,3 +29,5 @@ htmlcov/
 .DS_Store
 .idea/
 .vscode/
+demo_0.docx
+.claude/

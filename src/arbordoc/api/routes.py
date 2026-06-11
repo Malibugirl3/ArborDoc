@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 
 from fastapi import APIRouter, BackgroundTasks, File, UploadFile
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, JSONResponse
 
 from arbordoc.core.parser import parse_docx
 from arbordoc.core.styler import transform_docx
