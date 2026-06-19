@@ -16,7 +16,7 @@
 | 项目     | 内容                                                                                 |
 | ------ | ---------------------------------------------------------------------------------- |
 | 项目名称   | ArborDoc — 结构化 DOCX 解析与重建工具包                                                       |
-| 作者     | 马平川（Ma PingChuan）、**施恺博**（Shi Kaibo）                                               |
+| 作者     | **马平川**（Ma PingChuan）、**施恺博**（Shi Kaibo）                                               |
 | 学号     | *2024302111184、2024302082005*                                                      |
 | Git 仓库 | [https://github.com/Malibugirl3/ArborDoc](https://github.com/Malibugirl3/ArborDoc) |
 | 许可证    | [MIT License](LICENSE)（合理开源许可）                                                     |
