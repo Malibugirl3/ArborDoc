@@ -2,8 +2,11 @@
 name = "arbordoc"
 version = "0.1.0"
 description = "Structured DOCX parsing and transformation toolkit."
-authors = ["ArborDoc Contributors"]
+authors = ["Ma PingChuan"]
+license = "MIT"
 readme = "README.md"
+repository = "https://github.com/Malibugirl3/ArborDoc"
+homepage = "https://github.com/Malibugirl3/ArborDoc"
 packages = [{ include = "arbordoc", from = "src" }]
 
 [tool.poetry.dependencies]

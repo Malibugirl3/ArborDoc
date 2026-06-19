@@ -1,5 +1,9 @@
 # ArborDoc
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
+[![CI](https://github.com/Malibugirl3/ArborDoc/actions/workflows/ci.yml/badge.svg)](https://github.com/Malibugirl3/ArborDoc/actions/workflows/ci.yml)
+
 [English](#english) | [中文](#chinese)
 
 ---
@@ -30,7 +34,7 @@ Key features:
 
 ```bash
 # Clone the repository
-git clone <repo-url> && cd ArborDoc
+git clone https://github.com/Malibugirl3/ArborDoc.git && cd ArborDoc
 
 # Install dependencies and the package in editable mode
 poetry install
@@ -207,6 +211,16 @@ examples/
 - Baseline LaTeX export (headings, paragraphs, tables, image TODO markers)
 - Assist: Markdown structural review, merge gate, `tree.merged.json`
 
+### License
+
+ArborDoc is released under the [MIT License](LICENSE).
+
+Copyright (c) 2026 Ma PingChuan
+
+### Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
 ---
 
 <a id="chinese"></a>
@@ -235,7 +249,7 @@ ArborDoc 是一个 Python 工具包，用于 **DOCX 结构化解析** 和 **基�
 
 ```bash
 # 克隆仓库
-git clone <repo-url> && cd ArborDoc
+git clone https://github.com/Malibugirl3/ArborDoc.git && cd ArborDoc
 
 # 安装依赖并以可编辑模式安装包
 poetry install
@@ -411,3 +425,13 @@ examples/
 - 重建时可选嵌入的内联图片
 - 基础 LaTeX 导出（标题、段落、表格、图片 TODO 标记）
 - Assist：Markdown 结构审阅、合并关卡、`tree.merged.json`
+
+### 许可证
+
+ArborDoc 采用 [MIT 许可证](LICENSE) 发布。
+
+版权所有 (c) 2026 Ma PingChuan
+
+### 贡献
+
+请参阅 [CONTRIBUTING.md](CONTRIBUTING.md) 与 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
