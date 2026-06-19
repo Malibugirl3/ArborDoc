@@ -215,7 +215,7 @@ examples/
 
 ArborDoc is released under the [MIT License](LICENSE).
 
-Copyright (c) 2026 Ma PingChuan
+Copyright (c) 2026 Ma PingChuan, Shi Kaibo
 
 ### Contributing
 
@@ -430,7 +430,7 @@ examples/
 
 ArborDoc 采用 [MIT 许可证](LICENSE) 发布。
 
-版权所有 (c) 2026 Ma PingChuan
+版权所有 (c) 2026 Ma PingChuan, Shi Kaibo
 
 ### 贡献
 
