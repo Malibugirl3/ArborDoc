@@ -1,8 +1,8 @@
 # ArborDoc
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
-[![CI](https://github.com/Malibugirl3/ArborDoc/actions/workflows/ci.yml/badge.svg)](https://github.com/Malibugirl3/ArborDoc/actions/workflows/ci.yml)
+[License: MIT](LICENSE)
+[Python](https://www.python.org/)
+[CI](https://github.com/Malibugirl3/ArborDoc/actions/workflows/ci.yml)
 
 [English](#english) | [中文](#chinese)
 
@@ -12,22 +12,25 @@
 
 > **武汉大学开源软件与技术课程 2026（OSSTA）实验报告**
 
-| 项目 | 内容 |
-|------|------|
-| 项目名称 | ArborDoc — 结构化 DOCX 解析与重建工具包 |
-| 作者 | 马平川（Ma PingChuan）、石凯博（Shi Kaibo） |
-| 学号 | *（提交前请按「学号+姓名」格式填写）* |
-| Git 仓库 | https://github.com/Malibugirl3/ArborDoc |
-| 许可证 | [MIT License](LICENSE)（合理开源许可） |
-| 完整文档 | 本 README + [docs/SUBMISSION.md](docs/SUBMISSION.md) |
 
-**提交文件夹命名规范：** `学号+姓名`（例如 `2024301234马平川`）
+| 项目     | 内容                                                                                 |
+| ------ | ---------------------------------------------------------------------------------- |
+| 项目名称   | ArborDoc — 结构化 DOCX 解析与重建工具包                                                       |
+| 作者     | 马平川（Ma PingChuan）、**施恺博**（Shi Kaibo）                                               |
+| 学号     | *2024302111184、2024302082005*                                                      |
+| Git 仓库 | [https://github.com/Malibugirl3/ArborDoc](https://github.com/Malibugirl3/ArborDoc) |
+| 许可证    | [MIT License](LICENSE)（合理开源许可）                                                     |
+| 完整文档   | 本 README + [docs/SUBMISSION.md](docs/SUBMISSION.md)                                |
+
+
+
 
 **代码注释规范：** 核心模块采用 [Doxygen](https://www.doxygen.org/) 风格文档注释（`@file`、`@brief`、`@author` 等）。
 
 ---
 
-<a id="english"></a>
+
+
 ## English
 
 ### Overview
@@ -242,7 +245,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.
 
 ---
 
-<a id="chinese"></a>
+
+
 ## 中文
 
 ### 概述
