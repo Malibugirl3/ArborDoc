@@ -1,4 +1,11 @@
-"""Command line interface for ArborDoc."""
+"""
+@file cli.py
+@brief Command-line interface for ArborDoc.
+
+@author Ma PingChuan, Shi Kaibo
+@copyright Copyright (c) 2026 Ma PingChuan, Shi Kaibo. SPDX-License-Identifier: MIT
+@date 2026
+"""
 
 from __future__ import annotations
 

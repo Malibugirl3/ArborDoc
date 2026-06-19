@@ -8,6 +8,25 @@
 
 ---
 
+## 课程提交信息
+
+> **武汉大学开源软件与技术课程 2026（OSSTA）实验报告**
+
+| 项目 | 内容 |
+|------|------|
+| 项目名称 | ArborDoc — 结构化 DOCX 解析与重建工具包 |
+| 作者 | 马平川（Ma PingChuan）、石凯博（Shi Kaibo） |
+| 学号 | *（提交前请按「学号+姓名」格式填写）* |
+| Git 仓库 | https://github.com/Malibugirl3/ArborDoc |
+| 许可证 | [MIT License](LICENSE)（合理开源许可） |
+| 完整文档 | 本 README + [docs/SUBMISSION.md](docs/SUBMISSION.md) |
+
+**提交文件夹命名规范：** `学号+姓名`（例如 `2024301234马平川`）
+
+**代码注释规范：** 核心模块采用 [Doxygen](https://www.doxygen.org/) 风格文档注释（`@file`、`@brief`、`@author` 等）。
+
+---
+
 <a id="english"></a>
 ## English
 

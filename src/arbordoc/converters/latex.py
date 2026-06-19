@@ -1,11 +1,10 @@
-"""Minimal LaTeX exporter for ArborDoc trees.
+"""
+@file latex.py
+@brief Export ArborDoc DocTree to baseline LaTeX.
 
-Phase 2 can evolve this module toward high-fidelity conversion. This first
-version focuses on a predictable, testable baseline:
-- heading levels map to section commands
-- paragraphs become plain text blocks
-- tables become simple bordered tabular environments
-- images become TODO placeholders with relationship ids
+@author Ma PingChuan, Shi Kaibo
+@copyright Copyright (c) 2026 Ma PingChuan, Shi Kaibo. SPDX-License-Identifier: MIT
+@date 2026
 """
 
 from __future__ import annotations

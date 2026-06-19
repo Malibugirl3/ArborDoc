@@ -1,12 +1,13 @@
-"""Public package exports for ArborDoc.
+"""
+@file __init__.py
+@brief ArborDoc public package API.
 
-The package surface exposes ArborDoc's own stable concepts:
-- DocTree models
-- parsing entry points
-- reconstruction entry points
+@author Ma PingChuan, Shi Kaibo
+@copyright Copyright (c) 2026 Ma PingChuan, Shi Kaibo. SPDX-License-Identifier: MIT
+@date 2026
 
-Callers should rely on these APIs instead of reaching directly into
-`python-docx`, which stays as the low-level dependency layer.
+The package surface exposes ArborDoc's stable concepts: DocTree models,
+parsing entry points, and reconstruction entry points.
 """
 
 from arbordoc.assist.pipeline import apply_merge_instructions, prepare_assist_workspace

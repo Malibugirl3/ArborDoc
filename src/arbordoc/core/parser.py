@@ -1,8 +1,13 @@
-"""Parsing utilities that turn extracted blocks into a logical document tree.
+"""
+@file parser.py
+@brief Build a logical document tree from extracted DOCX blocks.
 
-This module consumes ArborDoc `DocBlock`s instead of raw `python-docx`
-objects. That keeps extraction concerns separate from ArborDoc's own
-structure-building rules.
+@author Ma PingChuan, Shi Kaibo
+@copyright Copyright (c) 2026 Ma PingChuan, Shi Kaibo. SPDX-License-Identifier: MIT
+@date 2026
+
+Consumes DocBlock linear blocks (not raw python-docx objects) and applies
+ArborDoc structure-building rules to produce a DocTree.
 """
 
 from __future__ import annotations
@@ -20,6 +25,7 @@ from arbordoc.models.schema import (
     DocBlock,
     DocNode,
     HyperlinkRun,
+    InlineElement,
     InlineImageInline,
     ListInfo,
     NodeType,
@@ -29,7 +35,7 @@ from arbordoc.models.schema import (
 )
 
 
-def _build_inline_content(meta: dict) -> Optional[list[TextRun | HyperlinkRun | InlineImageInline]]:
+def _build_inline_content(meta: dict) -> Optional[list[InlineElement]]:
     """Build inline_content from meta runs and hyperlinks extracted from a paragraph."""
     runs_raw = meta.get("runs", [])
     links_raw = meta.get("hyperlinks", [])
@@ -38,7 +44,7 @@ def _build_inline_content(meta: dict) -> Optional[list[TextRun | HyperlinkRun | 
     if not runs_raw and not links_raw and not image_rel_ids:
         return None
 
-    inline: list[TextRun | HyperlinkRun | InlineImageInline] = []
+    inline: list[InlineElement] = []
 
     for img_rid in image_rel_ids:
         inline.append(InlineImageInline(relationship_id=str(img_rid)))

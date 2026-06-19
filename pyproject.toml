@@ -14,10 +14,16 @@ python = ">=3.9,<4.0"
 python-docx = "*"
 lxml = "*"
 pydantic = ">=2,<3"
+fastapi = { version = "*", optional = true }
+uvicorn = { version = "*", optional = true }
+python-multipart = { version = "*", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 httpx = "*"
+fastapi = "*"
+uvicorn = "*"
+python-multipart = "*"
 
 [tool.poetry.extras]
 server = ["fastapi", "uvicorn", "python-multipart"]

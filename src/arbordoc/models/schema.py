@@ -1,14 +1,19 @@
-"""Pydantic models representing ArborDoc's intermediate and tree structures.
+"""
+@file schema.py
+@brief Pydantic models for ArborDoc document structures.
 
-These models are intentionally independent from `python-docx` objects.
-They describe ArborDoc's own semantic structure so extracted blocks and
-parsed trees can be reused by the CLI, styler, and future exporters.
+@author Ma PingChuan, Shi Kaibo
+@copyright Copyright (c) 2026 Ma PingChuan, Shi Kaibo. SPDX-License-Identifier: MIT
+@date 2026
+
+These models are independent from python-docx objects and describe
+ArborDoc's semantic structure for extraction, parsing, and export.
 """
 
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
@@ -84,6 +89,9 @@ class InlineImageInline(BaseModel):
     relationship_id: str = ""
 
 
+InlineElement = Union[TextRun, HyperlinkRun, InlineImageInline]
+
+
 class ParagraphFormat(BaseModel):
     """Paragraph-level formatting."""
 
@@ -131,7 +139,7 @@ class DocNode(BaseModel):
     text: Optional[str] = None
     meta: dict[str, Any] = Field(default_factory=dict)
     children: list["DocNode"] = Field(default_factory=list)
-    inline_content: Optional[list[TextRun | HyperlinkRun | InlineImageInline]] = None
+    inline_content: Optional[list[InlineElement]] = None
     list_info: Optional[ListInfo] = None
     paragraph_format: Optional[ParagraphFormat] = None
 

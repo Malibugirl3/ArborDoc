@@ -1,10 +1,12 @@
-"""Minimal template reconstruction helpers for ArborDoc.
+"""
+@file styler.py
+@brief Rebuild DOCX documents from DocTree using a template.
 
-This module sits above the parser/tree layer:
-- parser: turns low-level DOCX content into ArborDoc's DocTree
-- styler: takes DocTree and writes supported content back into a document
+@author Ma PingChuan, Shi Kaibo
+@copyright Copyright (c) 2026 Ma PingChuan, Shi Kaibo. SPDX-License-Identifier: MIT
+@date 2026
 
-That separation keeps parsing rules and output rules independent.
+Takes a parsed DocTree and writes supported content back into a template document.
 """
 
 from __future__ import annotations

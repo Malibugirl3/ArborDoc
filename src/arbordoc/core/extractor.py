@@ -1,9 +1,12 @@
-"""DOCX extraction helpers that normalize `python-docx` objects into blocks.
+"""
+@file extractor.py
+@brief Extract DOCX content into ArborDoc DocBlock linear blocks.
 
-This module is ArborDoc's boundary with the low-level dependency layer:
-- `python-docx` reads OOXML-backed document objects
-- extractor functions translate those objects into ArborDoc `DocBlock`s
-- higher layers can then parse blocks without depending on raw DOCX objects
+@author Ma PingChuan, Shi Kaibo
+@copyright Copyright (c) 2026 Ma PingChuan, Shi Kaibo. SPDX-License-Identifier: MIT
+@date 2026
+
+Boundary module between python-docx and ArborDoc's own data structures.
 """
 
 from __future__ import annotations
